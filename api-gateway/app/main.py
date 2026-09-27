@@ -1,7 +1,9 @@
 import httpx
-
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
 
+load_dotenv()
 
 app = FastAPI(
     title="E-Commerce API Gateway"
@@ -9,11 +11,12 @@ app = FastAPI(
 
 
 SERVICES = {
-    "auth": "http://127.0.0.1:8001",
-    "products": "http://127.0.0.1:8002",
-    "orders": "http://127.0.0.1:8003"
+    "auth": os.getenv("AUTH_SERVICE_URL"),
+    "products": os.getenv("PRODUCT_SERVICE_URL"),
+    "orders": os.getenv("ORDER_SERVICE_URL")
 }
-
+if not all(SERVICES.values()):
+    raise RuntimeError("Service URLs are not configured")
 
 async def forward_request(
     request: Request,

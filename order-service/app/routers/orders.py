@@ -20,8 +20,11 @@ load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is not configured")
+
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL")
 
 ALGORITHM = "HS256"
 
@@ -80,7 +83,7 @@ def create_order(
 ):
     try:
         response = httpx.get(
-            f"http://127.0.0.1:8002/products/{order.product_id}"
+            f"{PRODUCT_SERVICE_URL}/products/{order.product_id}"
         )
     except httpx.RequestError:
         raise HTTPException(
